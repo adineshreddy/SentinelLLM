@@ -80,7 +80,7 @@ Two gateway Pods share PostgreSQL evidence and Redis budgets. This is a single-n
 
 ## Security boundaries and limits
 
-Default-deny policies restrict both ingress and egress. Only the console can call the gateway; the gateway can call inspection, MCP, PostgreSQL and Redis; monitoring has only its required paths. Role Pods can resolve cluster DNS. Arbitrary external egress is denied, including hosted LLM traffic. The verification uses actual Pod sockets, five permitted internal paths, five denied internal paths, DNS, and an unrestricted external control probe before asserting external egress denial. If the control probe fails, the test fails rather than claiming policy enforcement.
+Default-deny policies restrict both ingress and egress. Only the console can call the gateway; the gateway can call inspection, MCP, PostgreSQL and Redis; monitoring has only its required paths. Role Pods can resolve cluster DNS. DNS domain filtering and DNS-exfiltration defenses are outside this setup. Arbitrary direct external egress is denied, including hosted LLM traffic. The verification uses actual Pod sockets, five permitted internal paths, five denied internal paths, DNS, and an unrestricted external control probe before asserting external egress denial. If the control probe fails, the test fails rather than claiming policy enforcement.
 
 Restricted Pod Security admission requires non-root containers, dropped capabilities, RuntimeDefault seccomp and no privilege escalation. Application root filesystems are read-only; databases and monitoring retain required writable paths. Service-account token automount is disabled. Policies use Pod labels and do not replace gateway authentication or protect against cluster administrators changing labels. Port-forward access follows the Kubernetes control-plane path and is outside the Pod-to-Pod policy tests.
 
@@ -89,6 +89,8 @@ PostgreSQL and Redis use local PVCs. Grafana/Prometheus data uses bounded emptyD
 ## CI and cost
 
 [GitHub Actions](../../.github/workflows/ci.yml) runs Java/Python/BFF checks, API-contract validation, real PostgreSQL/Redis integration, Compose security checks, Chromium console/monitoring checks and Prometheus rules. A second job builds local images, deploys kind/Calico with Terraform, verifies real network isolation and Pod recovery, scales the gateway, and destroys its disposable resources.
+
+Browser tests use the [official Playwright container](https://playwright.dev/docs/docker), pinned to the same 1.63.0 version as the test package and to an image digest. Its preinstalled browsers/dependencies avoid per-run Ubuntu mirror downloads. Host networking is confined to this disposable Linux CI browser container so it can reach the loopback demo ports.
 
 First-party actions are pinned to full commit SHAs, checkout does not persist credentials, and workflow permissions are read-only. Tests generate fresh synthetic credentials; no repository secrets or provider API key are needed. Public standard GitHub-hosted runners are free under [GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions). Private repositories are manual by default to avoid consuming an unverified allowance. Cloud resources, paid runners and model inference are outside this workflow.
 

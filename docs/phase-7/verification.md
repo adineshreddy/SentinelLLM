@@ -17,7 +17,7 @@ Local validation on 2026-10-01: macOS ARM64, Apple M5, Docker 29.6.1 / Compose 5
 | Secret/state boundary | Actual state and backups scanned; no configured credential values; generated credentials/identity hashes excluded from staged source |
 | Teardown | Terraform destroyed all 45 resources; kind removed only the dedicated cluster |
 | Clean recreation | Passed: bootstrap, image load, 45-resource apply, smoke/monitoring checks and real network checks repeated after full teardown |
-| Hosted CI | Kubernetes passed twice; all 26 Compose checks passed on the second run. Browser checks passed 5/6 and exposed a policy-test startup admission race; all 6 passed locally after synchronizing on loaded configuration. Final full rerun pending. |
+| Hosted CI | Kubernetes passed twice; all 26 Compose checks passed on the second run. Browser checks passed 5/6 and exposed a policy-test startup admission race; all 6 passed locally after synchronizing on loaded configuration. An Ubuntu package-mirror slowdown timed out browser setup on a later runner; CI now uses the digest-pinned version-matched official Playwright image. Final full rerun pending. |
 
 The network checker separates Service workload labels from probe role labels so test Pods never become live Service endpoints. It fails if the positive external control cannot connect; a generally broken network is not accepted as evidence of external-egress enforcement. Recovery deletes runtime Pods, preserving Terraform-owned controllers/PVCs. No hosted model calls or cloud provisioning have been performed. Compose volumes remain independent and untouched.
 

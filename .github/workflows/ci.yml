@@ -61,8 +61,12 @@ jobs:
         run: services/inspection/.venv/bin/python -m pytest -q tests/integration
       - name: Browser and monitoring-rule checks
         run: |
-          (cd services/console && npx playwright install --with-deps chromium)
-          (cd services/console && SENTINEL_MONITORING_BROWSER_TEST=1 npx playwright test e2e/console.spec.ts e2e/monitoring.spec.ts)
+          # Official version-matched browser image avoids per-run Ubuntu mirror installs.
+          docker run --rm --init --network host --ipc host \
+            --user "$(id -u):$(id -g)" --env CI=1 --env SENTINEL_MONITORING_BROWSER_TEST=1 \
+            -v "$PWD:/work" -w /work/services/console \
+            mcr.microsoft.com/playwright:v1.63.0-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27 \
+            node node_modules/@playwright/test/cli.js test e2e/console.spec.ts e2e/monitoring.spec.ts
           docker compose --profile monitoring exec -T prometheus promtool check config /etc/prometheus/prometheus.yml
           docker run --rm --entrypoint promtool -v "$PWD/infrastructure/monitoring:/rules:ro" -w /rules prom/prometheus:v3.13.3 test rules alerts.test.yml
       - name: Remove disposable CI stack
