@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/decision.schema.json",
+  "title": "decision",
+  "type": "object",
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "operation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "policy_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "policy_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "output",
+        "preview",
+        "tool_input",
+        "tool_output"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "redact",
+        "deny"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "finding.schema.json"
+      },
+      "maxItems": 100,
+      "minItems": 0
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+      },
+      "maxItems": 32,
+      "minItems": 0
+    },
+    "tool_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "decision_id",
+    "operation_id",
+    "policy_id",
+    "policy_version",
+    "stage",
+    "action",
+    "findings",
+    "reason_codes"
+  ],
+  "additionalProperties": false
+}

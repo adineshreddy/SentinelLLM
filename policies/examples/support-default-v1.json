@@ -1,0 +1,53 @@
+{
+  "id": "support-default",
+  "version": 1,
+  "tenant_id": "demo",
+  "actions": {
+    "prompt_injection": {
+      "prompt": "deny",
+      "rag": "deny",
+      "response": "deny",
+      "tool_arguments": "deny",
+      "tool_result": "deny"
+    },
+    "jailbreak": {
+      "prompt": "deny",
+      "rag": "deny",
+      "response": "deny",
+      "tool_arguments": "deny",
+      "tool_result": "deny"
+    },
+    "secret": {
+      "prompt": "deny",
+      "rag": "deny",
+      "response": "deny",
+      "tool_arguments": "deny",
+      "tool_result": "deny"
+    },
+    "pii": {
+      "prompt": "redact",
+      "rag": "redact",
+      "response": "redact",
+      "tool_arguments": "deny",
+      "tool_result": "redact"
+    }
+  },
+  "roles": {
+    "support_agent": [
+      "kb.search",
+      "ticket.get"
+    ],
+    "viewer": [],
+    "operator": []
+  },
+  "limits": {
+    "request_bytes": 262144,
+    "response_bytes": 524288,
+    "requests_per_window": 30,
+    "window_seconds": 60,
+    "inspection_timeout_ms": 3000,
+    "provider_timeout_ms": 60000,
+    "max_concurrent_provider_calls": 2,
+    "default_output_tokens": 256
+  }
+}

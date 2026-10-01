@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/tool-request.schema.json",
+  "title": "tool-request",
+  "type": "object",
+  "properties": {
+    "tool_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "arguments": {
+      "type": "object",
+      "maxProperties": 32
+    }
+  },
+  "required": [
+    "tool_id",
+    "arguments"
+  ],
+  "additionalProperties": false
+}

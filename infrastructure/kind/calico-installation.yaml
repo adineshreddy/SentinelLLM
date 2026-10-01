@@ -1,0 +1,15 @@
+# Cluster bootstrap owns this CNI installation; Terraform owns only app resources.
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  variant: Calico
+  calicoNetwork:
+    linuxDataplane: Iptables
+    bgp: Disabled
+    ipPools:
+      - cidr: 10.244.0.0/16
+        encapsulation: VXLAN
+        natOutgoing: Enabled
+        nodeSelector: all()

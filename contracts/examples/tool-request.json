@@ -1,0 +1,6 @@
+{
+  "tool_id": "ticket.get",
+  "arguments": {
+    "ticket_id": "DEMO-42"
+  }
+}

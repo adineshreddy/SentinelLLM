@@ -1,0 +1,26 @@
+{
+  "dataset": "deepset/prompt-injections",
+  "revision": "4f61ecb038e9c3fb77e21034b22511b523772cdd",
+  "source": "https://huggingface.co/datasets/deepset/prompt-injections/tree/4f61ecb038e9c3fb77e21034b22511b523772cdd",
+  "license_metadata": {
+    "top_level": "apache-2.0",
+    "nested_dataset_info": "cc-by-4.0"
+  },
+  "files": {
+    "train.parquet": {
+      "path": "data/train-00000-of-00001-9564e8b05b4757ab.parquet",
+      "sha256": "2e10bc7ab30f542c97e4e83e2a5683000b5057d25ec10908784c631d44124c04",
+      "bytes": 40323
+    },
+    "test.parquet": {
+      "path": "data/test-00000-of-00001-701d16158af87368.parquet",
+      "sha256": "39ac797cabc157eeed58435a08593b2952bb6cb16fc394a2d383f447cc7b246e",
+      "bytes": 10892
+    },
+    "README.md": {
+      "path": "README.md",
+      "sha256": "d90b4518dfe06154deeec938243d1ec9119bdfbfd2105aee9cf1567999764b94",
+      "bytes": 500
+    }
+  }
+}

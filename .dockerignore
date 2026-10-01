@@ -1,0 +1,26 @@
+.git
+.env
+.env.*
+**/.venv
+**/target
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+runtime
+logs
+.DS_Store
+
+.sentinel-env-*
+
+**/dist
+**/test-results
+**/playwright-report
+evaluation/data/raw
+
+# Private monitoring credential mounts must never enter build contexts.
+secrets
+**/.terraform
+**/*.tfstate*
+**/*.tfplan
+**/terraform.tfvars
+**/*.auto.tfvars

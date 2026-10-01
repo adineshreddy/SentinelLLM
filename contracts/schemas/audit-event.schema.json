@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/audit-event.schema.json",
+  "title": "audit-event",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "operation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "decision_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "application_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "policy_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "policy_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "input",
+        "output",
+        "preview",
+        "tool_input",
+        "tool_output"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "redact",
+        "deny"
+      ]
+    },
+    "rule_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+      },
+      "maxItems": 100,
+      "minItems": 0
+    },
+    "detector_versions": {
+      "type": "object",
+      "properties": {
+        "prompt_injection": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "jailbreak": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "secret": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "pii": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "provider_mode": {
+      "type": "string",
+      "enum": [
+        "mock",
+        "navigator",
+        "ollama",
+        "none"
+      ]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "blocked",
+        "completed",
+        "dependency_failure",
+        "uncertain"
+      ]
+    },
+    "duration_ms": {
+      "type": "number",
+      "minimum": 0
+    },
+    "tool_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+      },
+      "maxItems": 32
+    },
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "event_id",
+    "operation_id",
+    "decision_id",
+    "timestamp",
+    "tenant_id",
+    "application_id",
+    "policy_id",
+    "policy_version",
+    "stage",
+    "action",
+    "rule_ids",
+    "detector_versions",
+    "provider_mode",
+    "outcome",
+    "duration_ms"
+  ],
+  "additionalProperties": false
+}

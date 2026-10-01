@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/config-response.schema.json",
+  "type": "object",
+  "properties": {
+    "policy": {
+      "$ref": "policy.schema.json"
+    },
+    "registry": {
+      "$ref": "registry.schema.json"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    }
+  },
+  "required": [
+    "revision",
+    "policy",
+    "registry"
+  ],
+  "additionalProperties": false,
+  "title": "config-response"
+}

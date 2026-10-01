@@ -1,0 +1,132 @@
+[
+  {
+    "schema": "contracts/schemas/chat-request.schema.json",
+    "file": "contracts/examples/chat-request.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/inspect-request.schema.json",
+    "file": "contracts/examples/inspect-request.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/inspection-request.schema.json",
+    "file": "contracts/examples/inspection-request.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/inspection-response.schema.json",
+    "file": "contracts/examples/inspection-response.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/decision.schema.json",
+    "file": "contracts/examples/decision.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/inspect-response.schema.json",
+    "file": "contracts/examples/inspect-response.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/chat-response.schema.json",
+    "file": "contracts/examples/chat-response.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/error.schema.json",
+    "file": "contracts/examples/error.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/audit-event.schema.json",
+    "file": "contracts/examples/audit-event.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/tool-request.schema.json",
+    "file": "contracts/examples/tool-request.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/tool-response.schema.json",
+    "file": "contracts/examples/tool-response.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/policy.schema.json",
+    "file": "policies/examples/support-default-v1.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/registry.schema.json",
+    "file": "policies/examples/tool-registry-v1.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/chat-request.schema.json",
+    "file": "contracts/examples/invalid/chat-spoofed-role.json",
+    "valid": false
+  },
+  {
+    "schema": "contracts/schemas/chat-request.schema.json",
+    "file": "contracts/examples/invalid/chat-streaming.json",
+    "valid": false
+  },
+  {
+    "schema": "contracts/schemas/finding.schema.json",
+    "file": "contracts/examples/invalid/finding-negative-span.json",
+    "valid": false
+  },
+  {
+    "schema": "contracts/schemas/audit-event.schema.json",
+    "file": "contracts/examples/invalid/audit-raw-content.json",
+    "valid": false
+  },
+  {
+    "schema": "contracts/schemas/tool-request.schema.json",
+    "file": "contracts/examples/invalid/tool-remote-url.json",
+    "valid": false
+  },
+  {
+    "schema": "contracts/schemas/inspect-response.schema.json",
+    "file": "contracts/examples/invalid/preview-deny-with-content.json",
+    "valid": false
+  },
+  {
+    "schema": "contracts/schemas/tool-catalogue.schema.json",
+    "valid": true,
+    "file": "contracts/examples/tool-catalogue.json"
+  },
+  {
+    "schema": "contracts/schemas/config-response.schema.json",
+    "file": "contracts/examples/config-response.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/config-history.schema.json",
+    "file": "contracts/examples/config-history.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/event-page.schema.json",
+    "file": "contracts/examples/event-page.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/config-update.schema.json",
+    "file": "contracts/examples/config-update.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/operation-trace.schema.json",
+    "file": "contracts/examples/operation-trace.json",
+    "valid": true
+  },
+  {
+    "schema": "contracts/schemas/config-update.schema.json",
+    "file": "contracts/examples/invalid/config-zero-revision.json",
+    "valid": false
+  }
+]

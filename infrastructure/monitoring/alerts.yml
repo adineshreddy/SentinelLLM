@@ -1,0 +1,30 @@
+groups:
+  - name: sentinel
+    rules:
+      - alert: SentinelGatewayUnavailable
+        expr: up{job="sentinel-gateway"} == 0
+        for: 15s
+        labels: {severity: critical}
+        annotations: {summary: "Gateway scrape unavailable; investigate process or metrics authentication."}
+      - alert: SentinelDependencyFailure
+        expr: sum by (dependency) (increase(sentinel_dependency_duration_seconds_count{result="failure"}[2m])) > 0
+        labels: {severity: warning}
+        annotations: {summary: "A bounded dependency call failed; inspect local operation metadata."}
+      - alert: SentinelAuditFailure
+        expr: sum(increase(sentinel_dependency_duration_seconds_count{dependency="audit",result="failure"}[2m])) > 0
+        labels: {severity: critical}
+        annotations: {summary: "Audit persistence failed; gateway must withhold execution or output."}
+      - alert: SentinelAdmissionPressure
+        expr: sum(rate(sentinel_http_duration_seconds_count{result="limited"}[2m])) > 1
+        for: 30s
+        labels: {severity: warning}
+        annotations: {summary: "Requests are being limited; inspect quota and concurrency settings."}
+      - alert: SentinelSecurityDenials
+        expr: sum(increase(sentinel_decisions_total{action="deny"}[2m])) > 5
+        labels: {severity: warning}
+        annotations: {summary: "Elevated content-policy denials; review metadata before changing policies."}
+      - alert: SentinelHighLatency
+        expr: histogram_quantile(0.95, sum by (le) (rate(sentinel_http_duration_seconds_bucket{route="chat",result="success"}[2m]))) > 2
+        for: 1m
+        labels: {severity: warning}
+        annotations: {summary: "Successful chat p95 exceeds the local demonstration threshold of 2 seconds."}

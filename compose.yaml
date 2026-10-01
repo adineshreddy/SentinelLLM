@@ -1,0 +1,203 @@
+name: sentinellm
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: sentinel_owner
+      POSTGRES_DB: sentinel
+      POSTGRES_PASSWORD: ${SENTINEL_DB_OWNER_PASSWORD:?Run setup_dev.py}
+      SENTINEL_DB_APP_PASSWORD: ${SENTINEL_DB_APP_PASSWORD:?Run setup_dev.py}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./infrastructure/postgres/01-roles.sql:/docker-entrypoint-initdb.d/01-roles.sql:ro
+    expose: ["5432"]
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "sentinel_owner", "-d", "sentinel"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    security_opt: ["no-new-privileges:true"]
+  redis:
+    image: redis:7.2-alpine
+    environment:
+      SENTINEL_REDIS_PASSWORD: ${SENTINEL_REDIS_PASSWORD:?Run setup_dev.py}
+    command: ["sh", "-c", 'exec redis-server --requirepass "$$SENTINEL_REDIS_PASSWORD" --appendonly yes --appendfsync always --maxmemory 64mb --maxmemory-policy noeviction']
+    volumes: ["redis:/data"]
+    expose: ["6379"]
+    mem_limit: 128m
+    healthcheck:
+      test: ["CMD-SHELL", 'REDISCLI_AUTH="$$SENTINEL_REDIS_PASSWORD" redis-cli ping | grep -q PONG']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    security_opt: ["no-new-privileges:true"]
+  migrate:
+    image: sentinellm-gateway
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    command: ["--migrate"]
+    environment:
+      SENTINEL_DB_URL: jdbc:postgresql://postgres:5432/sentinel
+      SENTINEL_DB_MIGRATION_USER: sentinel_owner
+      SENTINEL_DB_OWNER_PASSWORD: ${SENTINEL_DB_OWNER_PASSWORD:?Run setup_dev.py}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    mem_limit: 256m
+    security_opt: ["no-new-privileges:true"]
+  inspection:
+    build:
+      context: .
+      dockerfile: services/inspection/Dockerfile
+    environment:
+      SENTINEL_INSPECTION_KEY: ${SENTINEL_INSPECTION_KEY:?Run python3 tools/setup_dev.py first}
+      SENTINEL_CLASSIFIER_MODE: ${SENTINEL_CLASSIFIER_MODE:-off}
+    expose: ["8000"]
+    mem_limit: 384m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    security_opt: ["no-new-privileges:true"]
+  mcp-adapter:
+    build:
+      context: .
+      dockerfile: services/mcp-adapter/Dockerfile
+    environment:
+      SENTINEL_MCP_KEY: ${SENTINEL_MCP_KEY:?Run python3 tools/setup_dev.py first}
+      SENTINEL_DEMO_TOOL_TEXT: ${SENTINEL_DEMO_TOOL_TEXT:-Reset your demo password from account settings.}
+    expose: ["8100"]
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8100/health/live', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    security_opt: ["no-new-privileges:true"]
+  gateway:
+    image: sentinellm-gateway
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
+    environment:
+      SENTINEL_METRICS_KEY: ${SENTINEL_METRICS_KEY:?Run setup_dev.py}
+      SENTINEL_HTTP_CAPACITY: ${SENTINEL_HTTP_CAPACITY:-32}
+      SENTINEL_STATE_MODE: postgres
+      SENTINEL_DB_URL: jdbc:postgresql://postgres:5432/sentinel
+      SENTINEL_DB_USER: sentinel_app
+      SENTINEL_DB_APP_PASSWORD: ${SENTINEL_DB_APP_PASSWORD:?Run setup_dev.py}
+      SENTINEL_REDIS_HOST: redis
+      SENTINEL_REDIS_PASSWORD: ${SENTINEL_REDIS_PASSWORD:?Run setup_dev.py}
+      SENTINEL_BIND_ADDRESS: 0.0.0.0
+      SENTINEL_APPLICATION_KEYS_JSON: ${SENTINEL_APPLICATION_KEYS_JSON:?Run setup_dev.py}
+      SENTINEL_INSPECTION_KEY: ${SENTINEL_INSPECTION_KEY:?Run setup_dev.py}
+      SENTINEL_INSPECTION_URL: http://inspection:8000/internal/v1/inspect
+      SENTINEL_MCP_KEY: ${SENTINEL_MCP_KEY:?Run setup_dev.py}
+      SENTINEL_TOOL_MODE: mcp
+      SENTINEL_MCP_BRIDGE_URL: http://mcp-adapter:8100/internal/v1/tools/execute
+      SENTINEL_PROVIDER: ${SENTINEL_PROVIDER:-mock}
+      SENTINEL_MOCK_DELAY_MS: ${SENTINEL_MOCK_DELAY_MS:-0}
+      SENTINEL_MOCK_RESPONSE: ${SENTINEL_MOCK_RESPONSE:-SentinelLLM mock approved request.}
+      SENTINEL_HOSTED_ENABLED: ${SENTINEL_HOSTED_ENABLED:-false}
+      NAVIGATOR_BASE_URL: ${NAVIGATOR_BASE_URL:-https://api.ai.it.ufl.edu/v1}
+      NAVIGATOR_API_KEY: ${NAVIGATOR_API_KEY:-}
+      SENTINEL_AUDIT_PATH: /app/runtime/audit.jsonl
+    ports: ["127.0.0.1:${SENTINEL_PORT:-8080}:8080"]
+    volumes: ["audit:/app/runtime"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+      inspection:
+        condition: service_healthy
+      mcp-adapter:
+        condition: service_healthy
+    stop_grace_period: 100s
+    mem_limit: 640m
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/health/ready"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 15s
+    security_opt: ["no-new-privileges:true"]
+  console:
+    build:
+      context: .
+      dockerfile: services/console/Dockerfile
+    environment:
+      SENTINEL_CONSOLE_ORIGIN: http://127.0.0.1:${SENTINEL_CONSOLE_PORT:-3000}
+      SENTINEL_CONSOLE_GATEWAY_URL: http://gateway:8080
+      SENTINEL_CONSOLE_OPERATOR_PASSWORD: ${SENTINEL_CONSOLE_OPERATOR_PASSWORD:?Run setup_dev.py}
+      SENTINEL_CONSOLE_VIEWER_PASSWORD: ${SENTINEL_CONSOLE_VIEWER_PASSWORD:?Run setup_dev.py}
+      SENTINEL_OPERATOR_KEY: ${SENTINEL_OPERATOR_KEY:?Run setup_dev.py}
+      SENTINEL_VIEWER_KEY: ${SENTINEL_VIEWER_KEY:?Run setup_dev.py}
+      SENTINEL_DEMO_KEY: ${SENTINEL_DEMO_KEY:?Run setup_dev.py}
+      SENTINEL_PROVIDER: ${SENTINEL_PROVIDER:-mock}
+      NAVIGATOR_LLM_MODEL: ${NAVIGATOR_LLM_MODEL:-gpt-oss-120b}
+    ports: ["127.0.0.1:${SENTINEL_CONSOLE_PORT:-3000}:3000"]
+    depends_on:
+      gateway:
+        condition: service_healthy
+    mem_limit: 192m
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health/live', {headers: {host: new URL(process.env.SENTINEL_CONSOLE_ORIGIN).host}}).then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  prometheus:
+    image: prom/prometheus:v3.13.3
+    profiles: ["monitoring"]
+    command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=24h", "--storage.tsdb.retention.size=256MB"]
+    volumes:
+      - ./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./infrastructure/monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./secrets/monitoring/metrics-key:/run/secrets/metrics-key:ro
+      - prometheus:/prometheus
+    ports: ["127.0.0.1:9090:9090"]
+    mem_limit: 256m
+    security_opt: ["no-new-privileges:true"]
+    depends_on:
+      gateway:
+        condition: service_healthy
+  grafana:
+    image: grafana/grafana:13.2.3
+    profiles: ["monitoring"]
+    environment:
+      GOMEMLIMIT: 256MiB
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana-password
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: "false"
+    volumes:
+      - ./secrets/monitoring/grafana-password:/run/secrets/grafana-password:ro
+      - ./infrastructure/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./infrastructure/monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana:/var/lib/grafana
+    ports: ["127.0.0.1:3001:3000"]
+    mem_limit: 768m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:3000/api/health >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 20s
+    security_opt: ["no-new-privileges:true"]
+    depends_on: ["prometheus"]
+volumes:
+  prometheus:
+  grafana:
+  postgres:
+  redis:
+  audit:

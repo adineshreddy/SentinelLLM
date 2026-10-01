@@ -1,0 +1,11 @@
+{
+  "model": "gpt-oss-120b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How can I reset my demo password?"
+    }
+  ],
+  "max_tokens": 256,
+  "stream": true
+}

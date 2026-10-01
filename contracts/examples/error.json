@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "POLICY_DENIED",
+    "message": "Operation blocked by security policy.",
+    "operation_id": "00000000-0000-4000-8000-000000000001",
+    "decision_id": "00000000-0000-4000-8000-000000000002"
+  }
+}

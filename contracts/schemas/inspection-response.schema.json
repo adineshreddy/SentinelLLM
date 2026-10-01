@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/inspection-response.schema.json",
+  "title": "inspection-response",
+  "type": "object",
+  "properties": {
+    "operation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "failed"
+      ]
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "detector_versions": {
+      "type": "object",
+      "properties": {
+        "prompt_injection": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "jailbreak": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "secret": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "pii": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "prompt_injection",
+        "jailbreak",
+        "secret",
+        "pii"
+      ],
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "finding.schema.json"
+      },
+      "maxItems": 100,
+      "minItems": 0
+    }
+  },
+  "required": [
+    "operation_id",
+    "status",
+    "truncated",
+    "detector_versions",
+    "findings"
+  ],
+  "additionalProperties": false
+}

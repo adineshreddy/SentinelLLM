@@ -1,0 +1,9 @@
+{
+  "rule_id": "PII.EMAIL",
+  "category": "pii",
+  "severity": "medium",
+  "segment_id": "message-0",
+  "start_byte": -1,
+  "end_byte": 26,
+  "detector_version": "rules-v1"
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/error.schema.json",
+  "title": "error",
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "INVALID_REQUEST",
+            "UNAUTHENTICATED",
+            "POLICY_DENIED",
+            "PAYLOAD_TOO_LARGE",
+            "RATE_LIMITED",
+            "UPSTREAM_FAILED",
+            "DEPENDENCY_UNAVAILABLE",
+            "UPSTREAM_TIMEOUT",
+            "OUTCOME_UNCERTAIN",
+            "VERSION_CONFLICT",
+            "NOT_FOUND"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "operation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "decision_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "error"
+  ],
+  "additionalProperties": false
+}

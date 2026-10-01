@@ -1,0 +1,25 @@
+{
+  "events": [
+    {
+      "event_id": "00000000-0000-4000-8000-000000000004",
+      "operation_id": "00000000-0000-4000-8000-000000000001",
+      "decision_id": "00000000-0000-4000-8000-000000000002",
+      "timestamp": "2026-10-01T01:00:00Z",
+      "tenant_id": "demo",
+      "application_id": "support-demo",
+      "policy_id": "support-default",
+      "policy_version": 1,
+      "stage": "input",
+      "action": "redact",
+      "rule_ids": [
+        "PII.EMAIL"
+      ],
+      "detector_versions": {
+        "pii": "rules-v1"
+      },
+      "provider_mode": "mock",
+      "outcome": "approved",
+      "duration_ms": 1.0
+    }
+  ]
+}

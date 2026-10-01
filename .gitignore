@@ -1,0 +1,36 @@
+# Local credentials and state
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfplan
+terraform.tfvars
+*.auto.tfvars
+
+# Runtime audit/content and development outputs
+runtime/
+logs/
+*.log
+.venv/
+__pycache__/
+.pytest_cache/
+node_modules/
+dist/
+target/
+.DS_Store
+
+.sentinel-env-*
+
+playwright-report/
+test-results/
+
+# Public corpus cache; reproducible from the committed pinned source manifest.
+evaluation/data/raw/
+# CLI and kubeconfig caches are beneath runtime; all Terraform credentials/state stay private.
+crash.log
+crash.*.log

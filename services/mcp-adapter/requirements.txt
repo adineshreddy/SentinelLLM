@@ -1,0 +1,4 @@
+mcp==2.2.0
+fastapi==0.142.2
+uvicorn==0.54.0
+jsonschema==4.26.0

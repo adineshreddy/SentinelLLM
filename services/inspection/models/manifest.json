@@ -1,0 +1,17 @@
+{
+  "version": "tfidf-pi-v1",
+  "file": "tfidf-pi-v1.json",
+  "sha256": "16f388bf1ec2daba7e6a648dd01615f351b7fce75c6c038e9eef020e3036c989",
+  "bytes": 118087,
+  "threshold": 0.78,
+  "features": 1602,
+  "training_fingerprint": "fda70d88605b152a9b85c5d758756edaa1dcd50341b63eed3dfd877fbed2da1b",
+  "training": {
+    "algorithm": "TF-IDF word unigrams/bigrams; sublinear TF; smooth IDF; L2 norm; balanced logistic regression C=4; sigmoid calibration C=100",
+    "threshold_objective": "Maximize recall under observed threshold-dev false-positive rate <= 0.05; break ties by lower FPR then higher threshold; fixed grid 0.01..0.99",
+    "sklearn_version": "1.9.1",
+    "numpy_version": "2.5.3",
+    "export_parity_max_error": 1e-10
+  },
+  "runtime_version": "tfidf-pi-v1.16f388bf1ec2daba7e6a648dd01615f351b7fce75c6c038e9eef020e3036c989"
+}

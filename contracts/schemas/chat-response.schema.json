@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/chat-response.schema.json",
+  "title": "chat-response",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "object": {
+      "const": "chat.completion"
+    },
+    "created": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "choices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "const": 0
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "const": "assistant"
+              },
+              "content": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 0,
+                "maxLength": 131072
+              },
+              "tool_calls": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,128}$"
+                    },
+                    "type": {
+                      "const": "function"
+                    },
+                    "function": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+                        },
+                        "arguments": {
+                          "type": "string",
+                          "maxLength": 4096
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "arguments"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": false
+                },
+                "minItems": 1,
+                "maxItems": 4
+              }
+            },
+            "required": [
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          "finish_reason": {
+            "type": "string",
+            "enum": [
+              "stop",
+              "length",
+              "tool_calls"
+            ]
+          }
+        },
+        "required": [
+          "index",
+          "message",
+          "finish_reason"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "finish_reason": {
+                  "const": "tool_calls"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "message": {
+                  "required": [
+                    "tool_calls"
+                  ],
+                  "properties": {
+                    "content": {
+                      "const": null
+                    }
+                  }
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "message": {
+                  "not": {
+                    "required": [
+                      "tool_calls"
+                    ]
+                  },
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "maxItems": 1,
+      "minItems": 1
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "prompt_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens"
+      ],
+      "additionalProperties": false
+    },
+    "sentinel": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "policy_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+        },
+        "policy_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "input_action": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "redact"
+          ]
+        },
+        "output_action": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "redact"
+          ]
+        },
+        "decision_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "maxItems": 4,
+          "minItems": 2
+        },
+        "provider_mode": {
+          "type": "string",
+          "enum": [
+            "mock",
+            "navigator",
+            "ollama"
+          ]
+        },
+        "registry_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "operation_id",
+        "policy_id",
+        "policy_version",
+        "input_action",
+        "output_action",
+        "decision_ids",
+        "provider_mode"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "object",
+    "created",
+    "model",
+    "choices",
+    "sentinel"
+  ],
+  "additionalProperties": false
+}

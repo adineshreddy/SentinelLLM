@@ -1,0 +1,10 @@
+{
+  "segments": [
+    {
+      "id": "message-0",
+      "stage": "prompt",
+      "path": "/messages/0/content",
+      "text": "Contact alice@example.test"
+    }
+  ]
+}

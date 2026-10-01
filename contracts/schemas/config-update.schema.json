@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/config-update.schema.json",
+  "type": "object",
+  "properties": {
+    "expected_revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483646
+    },
+    "policy": {
+      "$ref": "policy.schema.json"
+    },
+    "registry": {
+      "$ref": "registry.schema.json"
+    }
+  },
+  "required": [
+    "expected_revision",
+    "policy",
+    "registry"
+  ],
+  "additionalProperties": false,
+  "title": "config-update"
+}

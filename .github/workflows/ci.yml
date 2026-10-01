@@ -1,0 +1,103 @@
+name: SentinelLLM CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_kubernetes:
+        description: Also verify the disposable kind/Terraform deployment
+        type: boolean
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: sentinel-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    # Private repositories stay manual to avoid consuming an unverified paid allowance.
+    if: ${{ !github.event.repository.private || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.14'
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Install locked test dependencies
+        run: |
+          python -m venv services/inspection/.venv
+          services/inspection/.venv/bin/pip install -r services/inspection/requirements-dev.lock
+          python -m venv services/mcp-adapter/.venv
+          services/mcp-adapter/.venv/bin/pip install -r services/mcp-adapter/requirements-dev.lock
+          python -m venv runtime/contracts
+          runtime/contracts/bin/pip install -r contracts/requirements-validation.txt
+          npm ci --prefix services/console
+      - name: Unit, boundary, contract and workflow checks
+        run: |
+          ./tools/check.sh
+          runtime/contracts/bin/python tools/validate_contracts.py
+          python tools/check_deployment.py
+      - name: Native PostgreSQL and Redis integration
+        run: python tools/check_state.py
+      - name: Build mock stack and monitoring containers
+        run: |
+          python tools/setup_monitoring.py
+          docker compose --profile monitoring up -d --build --wait
+      - name: Sequential Compose security and reliability checks
+        env:
+          SENTINEL_COMPOSE_TESTS: '1'
+        run: services/inspection/.venv/bin/python -m pytest -q tests/integration
+      - name: Browser and monitoring-rule checks
+        run: |
+          (cd services/console && npx playwright install --with-deps chromium)
+          (cd services/console && SENTINEL_MONITORING_BROWSER_TEST=1 npx playwright test e2e/console.spec.ts e2e/monitoring.spec.ts)
+          docker compose --profile monitoring exec -T prometheus promtool check config /etc/prometheus/prometheus.yml
+          docker run --rm --entrypoint promtool -v "$PWD/infrastructure/monitoring:/rules:ro" -w /rules prom/prometheus:v3.13.3 test rules alerts.test.yml
+      - name: Remove disposable CI stack
+        if: always()
+        run: docker compose --profile monitoring down -v --remove-orphans
+  kubernetes:
+    if: ${{ !github.event.repository.private || (github.event_name == 'workflow_dispatch' && inputs.run_kubernetes) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.14'
+      - name: Bootstrap policy-capable local cluster
+        run: |
+          python tools/install_deploy_tools.py
+          python tools/kind_bootstrap.py
+          python tools/setup_dev.py
+      - name: Build and load images
+        run: python tools/deploy_local.py images
+      - name: Terraform deploy and verify
+        run: |
+          python tools/deploy_local.py init
+          runtime/bin/terraform -chdir=infrastructure/terraform fmt -check
+          python tools/deploy_local.py validate
+          python tools/deploy_local.py apply --monitoring
+          python tools/check_kubernetes.py --exercise-recovery
+      - name: Verify Terraform scale change
+        run: |
+          python tools/deploy_local.py apply --monitoring --replicas 2
+          python tools/check_kubernetes.py --replicas 2 --skip-network
+          python tools/deploy_local.py apply --monitoring
+      - name: Remove only the disposable project cluster
+        if: always()
+        run: python tools/cleanup_kind.py

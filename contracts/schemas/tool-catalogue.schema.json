@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/tool-catalogue.schema.json",
+  "title": "tool-catalogue",
+  "type": "object",
+  "properties": {
+    "registry_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+          },
+          "input_schema": {
+            "type": "object"
+          },
+          "output_schema": {
+            "type": "object"
+          },
+          "side_effects": {
+            "const": false
+          }
+        },
+        "required": [
+          "tool_id",
+          "input_schema",
+          "output_schema",
+          "side_effects"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 16
+    }
+  },
+  "required": [
+    "registry_version",
+    "tools"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/inspect-request.schema.json",
+  "title": "inspect-request",
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "segment.schema.json"
+      },
+      "maxItems": 40,
+      "minItems": 1
+    }
+  },
+  "required": [
+    "segments"
+  ],
+  "additionalProperties": false
+}

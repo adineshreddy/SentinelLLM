@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "properties": {
+    "events": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "audit-event.schema.json"
+      }
+    },
+    "next_cursor": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]{0,18}$"
+    }
+  },
+  "required": [
+    "events"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/event-page.schema.json",
+  "title": "event-page"
+}

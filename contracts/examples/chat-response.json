@@ -1,0 +1,28 @@
+{
+  "id": "chatcmpl-demo-1",
+  "object": "chat.completion",
+  "created": 1790812800,
+  "model": "gpt-oss-120b",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Use the demo reset-password link."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "sentinel": {
+    "operation_id": "00000000-0000-4000-8000-000000000001",
+    "policy_id": "support-default",
+    "policy_version": 1,
+    "input_action": "allow",
+    "output_action": "allow",
+    "decision_ids": [
+      "00000000-0000-4000-8000-000000000002",
+      "00000000-0000-4000-8000-000000000003"
+    ],
+    "provider_mode": "mock"
+  }
+}

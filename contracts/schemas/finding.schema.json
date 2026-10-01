@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/finding.schema.json",
+  "title": "finding",
+  "type": "object",
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "prompt_injection",
+        "jailbreak",
+        "secret",
+        "pii"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "segment_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "start_byte": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "end_byte": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "detector_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "required": [
+    "rule_id",
+    "category",
+    "severity",
+    "segment_id",
+    "start_byte",
+    "end_byte",
+    "detector_version"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,13 @@
+{
+  "operation_id": "00000000-0000-4000-8000-000000000001",
+  "tool_id": "ticket.get",
+  "result": {
+    "ticket_id": "DEMO-42",
+    "status": "open",
+    "summary": "Synthetic demonstration ticket."
+  },
+  "decision_ids": [
+    "00000000-0000-4000-8000-000000000002",
+    "00000000-0000-4000-8000-000000000003"
+  ]
+}

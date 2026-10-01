@@ -1,0 +1,35 @@
+rule_files: [alerts.yml]
+evaluation_interval: 5s
+tests:
+  - interval: 5s
+    input_series:
+      - series: 'sentinel_dependency_duration_seconds_count{dependency="audit",result="failure"}'
+        values: '0 0 0 1 1 1 1 1 1 1 1 1 1'
+      - series: 'sentinel_dependency_duration_seconds_count{dependency="redis",result="rejected"}'
+        values: '0+20x12'
+      - series: 'up{job="sentinel-gateway",instance="gateway:8080"}'
+        values: '1 1 1 1 1 1 1 1 1 1 1 1 1'
+    alert_rule_test:
+      - eval_time: 30s
+        alertname: SentinelAuditFailure
+        exp_alerts:
+          - exp_labels: {severity: critical}
+            exp_annotations: {summary: "Audit persistence failed; gateway must withhold execution or output."}
+      - eval_time: 30s
+        alertname: SentinelDependencyFailure
+        exp_alerts:
+          - exp_labels: {severity: warning, dependency: audit}
+            exp_annotations: {summary: "A bounded dependency call failed; inspect local operation metadata."}
+      - eval_time: 30s
+        alertname: SentinelGatewayUnavailable
+        exp_alerts: []
+  - interval: 5s
+    input_series:
+      - series: 'up{job="sentinel-gateway",instance="gateway:8080"}'
+        values: '0 0 0 0 0 0 0'
+    alert_rule_test:
+      - eval_time: 20s
+        alertname: SentinelGatewayUnavailable
+        exp_alerts:
+          - exp_labels: {severity: critical, job: sentinel-gateway, instance: "gateway:8080"}
+            exp_annotations: {summary: "Gateway scrape unavailable; investigate process or metrics authentication."}

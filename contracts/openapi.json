@@ -1,0 +1,1970 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "SentinelLLM gateway contracts",
+    "version": "0.3.0",
+    "description": "Phase 3 gateway: buffered generation, content/tool/schema enforcement, durable tenant-scoped operation metadata, optimistic versioned policy/registry updates, and Redis-backed admission. Public gateway and private inspection/MCP services have distinct boundaries."
+  },
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "Buffered text, approved tool proposals, and registered structured output",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/chat-request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approved result; preview may contain a denial decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/chat-response"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspect": {
+      "post": {
+        "summary": "Phase 1 advisory preview, no execution",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/inspect-request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approved result; preview may contain a denial decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inspect-response"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/inspect": {
+      "post": {
+        "summary": "Phase 1 private findings service",
+        "security": [
+          {
+            "serviceBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/inspection-request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approved result; preview may contain a denial decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inspection-response"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://inspection:8000",
+            "description": "Private inspection service; not exposed by gateway"
+          }
+        ]
+      }
+    },
+    "/api/v1/tools/execute": {
+      "post": {
+        "summary": "Reauthorize, inspect, execute registered read-only tool, and inspect result",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/tool-request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approved result; preview may contain a denial decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tool-response"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "summary": "Minimal service liveness",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Alive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "const": "up"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tools": {
+      "get": {
+        "summary": "List tools allowed for the authenticated application",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorized tool definitions from the trusted registry",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tool-catalogue"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/management/config": {
+      "get": {
+        "summary": "Read current policy and registry revision",
+        "description": "Authenticated operator required for updates; operator or viewer required for reads. Tenant is derived from credentials.",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Tenant-scoped management result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/config-response"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atomically activate the next policy and registry revision",
+        "description": "Authenticated operator required for updates; operator or viewer required for reads. Tenant is derived from credentials.",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Tenant-scoped management result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/config-response"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/config-update"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/management/config/history": {
+      "get": {
+        "summary": "Read immutable configuration history",
+        "description": "Authenticated operator required for updates; operator or viewer required for reads. Tenant is derived from credentials.",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Tenant-scoped management result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/config-history"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/management/events": {
+      "get": {
+        "summary": "Read sanitized security events",
+        "description": "Authenticated operator required for updates; operator or viewer required for reads. Tenant is derived from credentials.",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Tenant-scoped management result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/event-page"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            }
+          },
+          {
+            "name": "stage",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "input",
+                "output",
+                "preview",
+                "tool_input",
+                "tool_output"
+              ]
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/management/operations/{operation}": {
+      "get": {
+        "summary": "Read durable operation metadata and event trace",
+        "description": "Authenticated operator required for updates; operator or viewer required for reads. Tenant is derived from credentials.",
+        "security": [
+          {
+            "applicationBearer": []
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Tenant-scoped management result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/operation-trace"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "operation",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "summary": "Check mandatory state dependencies",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Alive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "const": "up"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error"
+                }
+              }
+            },
+            "headers": {
+              "X-Sentinel-Operation-ID": {
+                "description": "Server-generated operation UUID",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "applicationBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "serviceBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "chat-request": {
+        "$ref": "schemas/chat-request.schema.json"
+      },
+      "chat-response": {
+        "$ref": "schemas/chat-response.schema.json"
+      },
+      "inspect-request": {
+        "$ref": "schemas/inspect-request.schema.json"
+      },
+      "inspect-response": {
+        "$ref": "schemas/inspect-response.schema.json"
+      },
+      "inspection-request": {
+        "$ref": "schemas/inspection-request.schema.json"
+      },
+      "inspection-response": {
+        "$ref": "schemas/inspection-response.schema.json"
+      },
+      "tool-request": {
+        "$ref": "schemas/tool-request.schema.json"
+      },
+      "tool-response": {
+        "$ref": "schemas/tool-response.schema.json"
+      },
+      "error": {
+        "$ref": "schemas/error.schema.json"
+      },
+      "tool-catalogue": {
+        "$ref": "schemas/tool-catalogue.schema.json"
+      },
+      "config-update": {
+        "$ref": "schemas/config-update.schema.json"
+      },
+      "config-response": {
+        "$ref": "schemas/config-response.schema.json"
+      },
+      "config-history": {
+        "$ref": "schemas/config-history.schema.json"
+      },
+      "event-page": {
+        "$ref": "schemas/event-page.schema.json"
+      },
+      "operation-trace": {
+        "$ref": "schemas/operation-trace.schema.json"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local development gateway"
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "expected_revision": 1,
+  "policy": {
+    "id": "support-default",
+    "version": 2,
+    "tenant_id": "demo",
+    "actions": {
+      "prompt_injection": {
+        "prompt": "deny",
+        "rag": "deny",
+        "response": "deny",
+        "tool_arguments": "deny",
+        "tool_result": "deny"
+      },
+      "jailbreak": {
+        "prompt": "deny",
+        "rag": "deny",
+        "response": "deny",
+        "tool_arguments": "deny",
+        "tool_result": "deny"
+      },
+      "secret": {
+        "prompt": "deny",
+        "rag": "deny",
+        "response": "deny",
+        "tool_arguments": "deny",
+        "tool_result": "deny"
+      },
+      "pii": {
+        "prompt": "redact",
+        "rag": "redact",
+        "response": "redact",
+        "tool_arguments": "deny",
+        "tool_result": "redact"
+      }
+    },
+    "roles": {
+      "support_agent": [
+        "kb.search",
+        "ticket.get"
+      ],
+      "viewer": [],
+      "operator": []
+    },
+    "limits": {
+      "request_bytes": 262144,
+      "response_bytes": 524288,
+      "requests_per_window": 30,
+      "window_seconds": 60,
+      "inspection_timeout_ms": 3000,
+      "provider_timeout_ms": 60000,
+      "max_concurrent_provider_calls": 2,
+      "default_output_tokens": 256
+    }
+  },
+  "registry": {
+    "version": 2,
+    "tools": [
+      {
+        "tool_id": "kb.search",
+        "executor": "demo_kb",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "documents": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+                  },
+                  "text": {
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 16384
+                  }
+                },
+                "required": [
+                  "id",
+                  "text"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 8,
+              "minItems": 0
+            }
+          },
+          "required": [
+            "documents"
+          ],
+          "additionalProperties": false
+        },
+        "side_effects": false
+      },
+      {
+        "tool_id": "ticket.get",
+        "executor": "demo_ticket",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "ticket_id": {
+              "type": "string",
+              "pattern": "^DEMO-[0-9]{1,6}$"
+            }
+          },
+          "required": [
+            "ticket_id"
+          ],
+          "additionalProperties": false
+        },
+        "output_schema": {
+          "type": "object",
+          "properties": {
+            "ticket_id": {
+              "type": "string",
+              "pattern": "^DEMO-[0-9]{1,6}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 1024
+            }
+          },
+          "required": [
+            "ticket_id",
+            "status",
+            "summary"
+          ],
+          "additionalProperties": false
+        },
+        "side_effects": false
+      }
+    ],
+    "output_schemas": [
+      {
+        "id": "support-answer-v1",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "source_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+              },
+              "maxItems": 8,
+              "minItems": 0
+            }
+          },
+          "required": [
+            "answer",
+            "source_ids"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}

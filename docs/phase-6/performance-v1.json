@@ -1,0 +1,727 @@
+{
+  "format_version": 1,
+  "provider": "mock",
+  "classifier_mode": "off",
+  "timestamp_utc": "2026-10-01T14:27:49Z",
+  "hardware": {
+    "os": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "architecture": "arm64",
+    "logical_cpus": 10,
+    "cpu": "Apple M5",
+    "ram_bytes": "17179869184"
+  },
+  "method": "closed-loop stdlib urllib; nearest-rank percentiles; client latency includes loopback, serialization and durable state",
+  "runs": [
+    {
+      "workload": "preview",
+      "concurrency": 1,
+      "attempts": 200,
+      "duration_seconds": 1.509540457976982,
+      "attempts_per_second": 132.49065233271784,
+      "successful_per_second": 132.49065233271784,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 6.413375027477741,
+        "p95": 14.048916986212134,
+        "p99": 28.3910830039531
+      },
+      "success_latency_ms": {
+        "p50": 6.413375027477741,
+        "p95": 14.048916986212134,
+        "p99": 28.3910830039531
+      },
+      "mean_client_ms": 7.53141131484881,
+      "dependencies": {
+        "inspection": {
+          "calls": 200,
+          "mean_call_ms": 1.76701649,
+          "amortized_ms_per_attempt": 1.76701649
+        },
+        "audit": {
+          "calls": 200,
+          "mean_call_ms": 0.6655575,
+          "amortized_ms_per_attempt": 0.6655575
+        },
+        "state": {
+          "calls": 600,
+          "mean_call_ms": 0.5635899849999998,
+          "amortized_ms_per_attempt": 1.6907699549999995
+        },
+        "redis": {
+          "calls": 200,
+          "mean_call_ms": 1.0032201899999997,
+          "amortized_ms_per_attempt": 1.0032201899999997
+        }
+      },
+      "unattributed_client_ms_per_attempt": 2.4048471798488116
+    },
+    {
+      "workload": "preview",
+      "concurrency": 2,
+      "attempts": 200,
+      "duration_seconds": 0.8896567500196397,
+      "attempts_per_second": 224.80580290722784,
+      "successful_per_second": 224.80580290722784,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 7.2405829560011625,
+        "p95": 14.52237507328391,
+        "p99": 39.0790409874171
+      },
+      "success_latency_ms": {
+        "p50": 7.2405829560011625,
+        "p95": 14.52237507328391,
+        "p99": 39.0790409874171
+      },
+      "mean_client_ms": 8.874529619934037,
+      "dependencies": {
+        "inspection": {
+          "calls": 200,
+          "mean_call_ms": 2.154156915,
+          "amortized_ms_per_attempt": 2.154156915
+        },
+        "audit": {
+          "calls": 200,
+          "mean_call_ms": 0.7515125050000002,
+          "amortized_ms_per_attempt": 0.7515125050000002
+        },
+        "state": {
+          "calls": 600,
+          "mean_call_ms": 0.6731322166666667,
+          "amortized_ms_per_attempt": 2.01939665
+        },
+        "redis": {
+          "calls": 200,
+          "mean_call_ms": 1.0310511850000004,
+          "amortized_ms_per_attempt": 1.0310511850000004
+        }
+      },
+      "unattributed_client_ms_per_attempt": 2.9184123649340368
+    },
+    {
+      "workload": "preview",
+      "concurrency": 8,
+      "attempts": 200,
+      "duration_seconds": 0.580958167091012,
+      "attempts_per_second": 344.25886635081645,
+      "successful_per_second": 344.25886635081645,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 17.054166877642274,
+        "p95": 52.44449991732836,
+        "p99": 86.21162502095103
+      },
+      "success_latency_ms": {
+        "p50": 17.054166877642274,
+        "p95": 52.44449991732836,
+        "p99": 86.21162502095103
+      },
+      "mean_client_ms": 23.004827898694202,
+      "dependencies": {
+        "inspection": {
+          "calls": 200,
+          "mean_call_ms": 8.798661019999999,
+          "amortized_ms_per_attempt": 8.798661019999999
+        },
+        "audit": {
+          "calls": 200,
+          "mean_call_ms": 1.9313533250000001,
+          "amortized_ms_per_attempt": 1.9313533250000001
+        },
+        "state": {
+          "calls": 601,
+          "mean_call_ms": 2.0262555074875213,
+          "amortized_ms_per_attempt": 6.088897800000001
+        },
+        "redis": {
+          "calls": 201,
+          "mean_call_ms": 2.070671024875622,
+          "amortized_ms_per_attempt": 2.08102438
+        }
+      },
+      "unattributed_client_ms_per_attempt": 4.104891373694201
+    },
+    {
+      "workload": "chat",
+      "concurrency": 1,
+      "attempts": 200,
+      "duration_seconds": 1.9022952090017498,
+      "attempts_per_second": 105.1361529238946,
+      "successful_per_second": 105.1361529238946,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 8.590332930907607,
+        "p95": 13.17020901478827,
+        "p99": 32.485291827470064
+      },
+      "success_latency_ms": {
+        "p50": 8.590332930907607,
+        "p95": 13.17020901478827,
+        "p99": 32.485291827470064
+      },
+      "mean_client_ms": 9.491485581966117,
+      "dependencies": {
+        "inspection": {
+          "calls": 600,
+          "mean_call_ms": 0.9104107083333334,
+          "amortized_ms_per_attempt": 2.731232125
+        },
+        "provider": {
+          "calls": 200,
+          "mean_call_ms": 0.019901899999999997,
+          "amortized_ms_per_attempt": 0.019901899999999997
+        },
+        "audit": {
+          "calls": 1000,
+          "mean_call_ms": 0.39774261499999997,
+          "amortized_ms_per_attempt": 1.9887130749999997
+        },
+        "state": {
+          "calls": 600,
+          "mean_call_ms": 0.3418043166666666,
+          "amortized_ms_per_attempt": 1.0254129499999998
+        },
+        "redis": {
+          "calls": 400,
+          "mean_call_ms": 0.5322756900000003,
+          "amortized_ms_per_attempt": 1.0645513800000006
+        }
+      },
+      "unattributed_client_ms_per_attempt": 2.6616741519661167
+    },
+    {
+      "workload": "chat",
+      "concurrency": 2,
+      "attempts": 200,
+      "duration_seconds": 1.2375074161682278,
+      "attempts_per_second": 161.61519307841613,
+      "successful_per_second": 161.61519307841613,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 10.839957976713777,
+        "p95": 18.04837491363287,
+        "p99": 35.42908397503197
+      },
+      "success_latency_ms": {
+        "p50": 10.839957976713777,
+        "p95": 18.04837491363287,
+        "p99": 35.42908397503197
+      },
+      "mean_client_ms": 12.356517444131896,
+      "dependencies": {
+        "inspection": {
+          "calls": 600,
+          "mean_call_ms": 1.306921253333333,
+          "amortized_ms_per_attempt": 3.9207637599999985
+        },
+        "provider": {
+          "calls": 200,
+          "mean_call_ms": 0.015995795,
+          "amortized_ms_per_attempt": 0.015995795
+        },
+        "audit": {
+          "calls": 1000,
+          "mean_call_ms": 0.45678826000000017,
+          "amortized_ms_per_attempt": 2.283941300000001
+        },
+        "state": {
+          "calls": 600,
+          "mean_call_ms": 0.47282212166666654,
+          "amortized_ms_per_attempt": 1.4184663649999996
+        },
+        "redis": {
+          "calls": 400,
+          "mean_call_ms": 0.8067158075000003,
+          "amortized_ms_per_attempt": 1.6134316150000005
+        }
+      },
+      "unattributed_client_ms_per_attempt": 3.103918609131897
+    },
+    {
+      "workload": "chat",
+      "concurrency": 8,
+      "attempts": 200,
+      "duration_seconds": 0.27901783282868564,
+      "attempts_per_second": 716.8000624633844,
+      "successful_per_second": 93.18400812023997,
+      "statuses": {
+        "200": 26,
+        "429": 174
+      },
+      "all_latency_ms": {
+        "p50": 8.105750195682049,
+        "p95": 27.055124985054135,
+        "p99": 35.94104200601578
+      },
+      "success_latency_ms": {
+        "p50": 25.913082994520664,
+        "p95": 36.510958103463054,
+        "p99": 37.48654201626778
+      },
+      "mean_client_ms": 10.980592546984553,
+      "dependencies": {
+        "inspection": {
+          "calls": 78,
+          "mean_call_ms": 2.6565112564102584,
+          "amortized_ms_per_attempt": 1.036039390000001
+        },
+        "provider": {
+          "calls": 26,
+          "mean_call_ms": 0.030038576923076946,
+          "amortized_ms_per_attempt": 0.003905015000000003
+        },
+        "audit": {
+          "calls": 130,
+          "mean_call_ms": 1.513348323076924,
+          "amortized_ms_per_attempt": 0.9836764100000006
+        },
+        "state": {
+          "calls": 600,
+          "mean_call_ms": 1.2033735850000005,
+          "amortized_ms_per_attempt": 3.6101207550000014
+        },
+        "redis": {
+          "calls": 226,
+          "mean_call_ms": 1.6870804115044256,
+          "amortized_ms_per_attempt": 1.9064008650000008
+        }
+      },
+      "unattributed_client_ms_per_attempt": 3.44045011198455
+    },
+    {
+      "workload": "tool",
+      "concurrency": 1,
+      "attempts": 200,
+      "duration_seconds": 3.616470083128661,
+      "attempts_per_second": 55.30254513455759,
+      "successful_per_second": 55.30254513455759,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 16.477541998028755,
+        "p95": 25.253874948248267,
+        "p99": 54.2602501809597
+      },
+      "success_latency_ms": {
+        "p50": 16.477541998028755,
+        "p95": 25.253874948248267,
+        "p99": 54.2602501809597
+      },
+      "mean_client_ms": 18.057529798243195,
+      "dependencies": {
+        "inspection": {
+          "calls": 400,
+          "mean_call_ms": 1.0970627275,
+          "amortized_ms_per_attempt": 2.194125455
+        },
+        "tool": {
+          "calls": 200,
+          "mean_call_ms": 8.657927710000001,
+          "amortized_ms_per_attempt": 8.657927710000001
+        },
+        "audit": {
+          "calls": 800,
+          "mean_call_ms": 0.46685353999999984,
+          "amortized_ms_per_attempt": 1.8674141599999994
+        },
+        "state": {
+          "calls": 601,
+          "mean_call_ms": 0.40413240765390973,
+          "amortized_ms_per_attempt": 1.2144178849999987
+        },
+        "redis": {
+          "calls": 401,
+          "mean_call_ms": 0.6460908004987533,
+          "amortized_ms_per_attempt": 1.2954120550000006
+        }
+      },
+      "unattributed_client_ms_per_attempt": 2.8282325332431952
+    },
+    {
+      "workload": "tool",
+      "concurrency": 2,
+      "attempts": 200,
+      "duration_seconds": 2.5036663750652224,
+      "attempts_per_second": 79.8828478074639,
+      "successful_per_second": 79.8828478074639,
+      "statuses": {
+        "200": 200
+      },
+      "all_latency_ms": {
+        "p50": 24.249708047136664,
+        "p95": 31.364375026896596,
+        "p99": 37.73212502710521
+      },
+      "success_latency_ms": {
+        "p50": 24.249708047136664,
+        "p95": 31.364375026896596,
+        "p99": 37.73212502710521
+      },
+      "mean_client_ms": 25.019782977178693,
+      "dependencies": {
+        "inspection": {
+          "calls": 400,
+          "mean_call_ms": 1.3738723299999989,
+          "amortized_ms_per_attempt": 2.7477446599999977
+        },
+        "tool": {
+          "calls": 200,
+          "mean_call_ms": 14.451994175,
+          "amortized_ms_per_attempt": 14.451994175
+        },
+        "audit": {
+          "calls": 800,
+          "mean_call_ms": 0.4719505700000004,
+          "amortized_ms_per_attempt": 1.8878022800000016
+        },
+        "state": {
+          "calls": 601,
+          "mean_call_ms": 0.4453318835274539,
+          "amortized_ms_per_attempt": 1.338222309999999
+        },
+        "redis": {
+          "calls": 401,
+          "mean_call_ms": 0.7252244289276807,
+          "amortized_ms_per_attempt": 1.4540749799999997
+        }
+      },
+      "unattributed_client_ms_per_attempt": 3.1399445721786954
+    },
+    {
+      "workload": "tool",
+      "concurrency": 8,
+      "attempts": 200,
+      "duration_seconds": 0.48003895790316164,
+      "attempts_per_second": 416.6328517868878,
+      "successful_per_second": 89.57606313418087,
+      "statuses": {
+        "200": 43,
+        "429": 157
+      },
+      "all_latency_ms": {
+        "p50": 11.019540950655937,
+        "p95": 54.65783388353884,
+        "p99": 65.05970796570182
+      },
+      "success_latency_ms": {
+        "p50": 47.88649990223348,
+        "p95": 65.05970796570182,
+        "p99": 66.76829210482538
+      },
+      "mean_client_ms": 18.933181017637253,
+      "dependencies": {
+        "inspection": {
+          "calls": 243,
+          "mean_call_ms": 2.4449069259259244,
+          "amortized_ms_per_attempt": 2.9705619149999984
+        },
+        "tool": {
+          "calls": 43,
+          "mean_call_ms": 28.703760651162792,
+          "amortized_ms_per_attempt": 6.17130854
+        },
+        "audit": {
+          "calls": 486,
+          "mean_call_ms": 0.956982436213992,
+          "amortized_ms_per_attempt": 2.325467320000001
+        },
+        "state": {
+          "calls": 600,
+          "mean_call_ms": 0.8584271216666666,
+          "amortized_ms_per_attempt": 2.5752813649999995
+        },
+        "redis": {
+          "calls": 243,
+          "mean_call_ms": 1.2842064403292197,
+          "amortized_ms_per_attempt": 1.560310825000002
+        }
+      },
+      "unattributed_client_ms_per_attempt": 3.3302510526372515
+    }
+  ],
+  "benchmark_policy": {
+    "id": "support-default",
+    "roles": {
+      "viewer": [],
+      "operator": [],
+      "support_agent": [
+        "kb.search",
+        "ticket.get"
+      ]
+    },
+    "limits": {
+      "request_bytes": 262144,
+      "response_bytes": 524288,
+      "window_seconds": 1,
+      "provider_timeout_ms": 60000,
+      "requests_per_window": 1000,
+      "default_output_tokens": 256,
+      "inspection_timeout_ms": 3000,
+      "max_concurrent_provider_calls": 2
+    },
+    "actions": {
+      "pii": {
+        "rag": "redact",
+        "prompt": "redact",
+        "response": "redact",
+        "tool_result": "redact",
+        "tool_arguments": "deny"
+      },
+      "secret": {
+        "rag": "deny",
+        "prompt": "deny",
+        "response": "deny",
+        "tool_result": "deny",
+        "tool_arguments": "deny"
+      },
+      "jailbreak": {
+        "rag": "deny",
+        "prompt": "deny",
+        "response": "deny",
+        "tool_result": "deny",
+        "tool_arguments": "deny"
+      },
+      "prompt_injection": {
+        "rag": "deny",
+        "prompt": "deny",
+        "response": "deny",
+        "tool_result": "deny",
+        "tool_arguments": "deny"
+      }
+    },
+    "version": 2,
+    "tenant_id": "benchmark"
+  },
+  "versions": {
+    "docker": "29.6.1",
+    "compose": "5.3.0",
+    "gateway_java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS\nOpenJDK Runtime Environment Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS)\nOpenJDK 64-Bit Server VM Temurin-21.0.12.1+1 (build 21.0.12.1+1-LTS, mixed mode, sharing)",
+    "inspector_python": "Python 3.14.2",
+    "redis": "Redis server v=7.2.16 sha=00000000:0 malloc=jemalloc-5.3.0 bits=64 build=ec26ae8dbff88af0",
+    "postgres": "postgres (PostgreSQL) 17.11",
+    "prometheus": "prometheus, version 3.13.3 (branch: HEAD, revision: b273ae3adeb64ad630d65ef7f16440df95658410)\n  build user:       root@a29bd0364bed\n  build date:       20260907-11:45:41\n  go version:       go1.26.8\n  platform:         linux/arm64\n  tags:             netgo,builtinassets"
+  },
+  "resources_docker_stats": [
+    [
+      {
+        "Name": "sentinellm-grafana-1",
+        "CPUPerc": "0.60%",
+        "MemUsage": "210.6MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-prometheus-1",
+        "CPUPerc": "1.31%",
+        "MemUsage": "80.4MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-gateway-1",
+        "CPUPerc": "115.40%",
+        "MemUsage": "309.5MiB / 640MiB"
+      },
+      {
+        "Name": "sentinellm-inspection-1",
+        "CPUPerc": "15.21%",
+        "MemUsage": "40.81MiB / 384MiB"
+      },
+      {
+        "Name": "sentinellm-mcp-adapter-1",
+        "CPUPerc": "0.13%",
+        "MemUsage": "61.37MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-console-1",
+        "CPUPerc": "0.03%",
+        "MemUsage": "20.2MiB / 192MiB"
+      },
+      {
+        "Name": "sentinellm-redis-1",
+        "CPUPerc": "1.45%",
+        "MemUsage": "9.543MiB / 128MiB"
+      },
+      {
+        "Name": "sentinellm-postgres-1",
+        "CPUPerc": "8.64%",
+        "MemUsage": "25.4MiB / 256MiB"
+      }
+    ],
+    [
+      {
+        "Name": "sentinellm-grafana-1",
+        "CPUPerc": "1.49%",
+        "MemUsage": "210.8MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-prometheus-1",
+        "CPUPerc": "0.15%",
+        "MemUsage": "80.4MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-gateway-1",
+        "CPUPerc": "69.45%",
+        "MemUsage": "338.1MiB / 640MiB"
+      },
+      {
+        "Name": "sentinellm-inspection-1",
+        "CPUPerc": "19.38%",
+        "MemUsage": "42.54MiB / 384MiB"
+      },
+      {
+        "Name": "sentinellm-mcp-adapter-1",
+        "CPUPerc": "0.19%",
+        "MemUsage": "61.37MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-console-1",
+        "CPUPerc": "29.12%",
+        "MemUsage": "20.2MiB / 192MiB"
+      },
+      {
+        "Name": "sentinellm-redis-1",
+        "CPUPerc": "1.99%",
+        "MemUsage": "9.57MiB / 128MiB"
+      },
+      {
+        "Name": "sentinellm-postgres-1",
+        "CPUPerc": "14.81%",
+        "MemUsage": "43.04MiB / 256MiB"
+      }
+    ],
+    [
+      {
+        "Name": "sentinellm-grafana-1",
+        "CPUPerc": "0.62%",
+        "MemUsage": "210.8MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-prometheus-1",
+        "CPUPerc": "0.13%",
+        "MemUsage": "80.46MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-gateway-1",
+        "CPUPerc": "38.90%",
+        "MemUsage": "361.2MiB / 640MiB"
+      },
+      {
+        "Name": "sentinellm-inspection-1",
+        "CPUPerc": "14.35%",
+        "MemUsage": "47.21MiB / 384MiB"
+      },
+      {
+        "Name": "sentinellm-mcp-adapter-1",
+        "CPUPerc": "42.70%",
+        "MemUsage": "64.83MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-console-1",
+        "CPUPerc": "0.00%",
+        "MemUsage": "20.2MiB / 192MiB"
+      },
+      {
+        "Name": "sentinellm-redis-1",
+        "CPUPerc": "1.22%",
+        "MemUsage": "9.762MiB / 128MiB"
+      },
+      {
+        "Name": "sentinellm-postgres-1",
+        "CPUPerc": "6.46%",
+        "MemUsage": "44.41MiB / 256MiB"
+      }
+    ],
+    [
+      {
+        "Name": "sentinellm-grafana-1",
+        "CPUPerc": "0.41%",
+        "MemUsage": "211.2MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-prometheus-1",
+        "CPUPerc": "0.40%",
+        "MemUsage": "80.49MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-gateway-1",
+        "CPUPerc": "48.38%",
+        "MemUsage": "367.6MiB / 640MiB"
+      },
+      {
+        "Name": "sentinellm-inspection-1",
+        "CPUPerc": "9.09%",
+        "MemUsage": "50.12MiB / 384MiB"
+      },
+      {
+        "Name": "sentinellm-mcp-adapter-1",
+        "CPUPerc": "50.32%",
+        "MemUsage": "65.63MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-console-1",
+        "CPUPerc": "0.01%",
+        "MemUsage": "20.2MiB / 192MiB"
+      },
+      {
+        "Name": "sentinellm-redis-1",
+        "CPUPerc": "1.18%",
+        "MemUsage": "10.01MiB / 128MiB"
+      },
+      {
+        "Name": "sentinellm-postgres-1",
+        "CPUPerc": "7.21%",
+        "MemUsage": "45.34MiB / 256MiB"
+      }
+    ],
+    [
+      {
+        "Name": "sentinellm-grafana-1",
+        "CPUPerc": "1.20%",
+        "MemUsage": "211.3MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-prometheus-1",
+        "CPUPerc": "3.31%",
+        "MemUsage": "80.5MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-gateway-1",
+        "CPUPerc": "67.89%",
+        "MemUsage": "370.7MiB / 640MiB"
+      },
+      {
+        "Name": "sentinellm-inspection-1",
+        "CPUPerc": "17.83%",
+        "MemUsage": "55.19MiB / 384MiB"
+      },
+      {
+        "Name": "sentinellm-mcp-adapter-1",
+        "CPUPerc": "44.68%",
+        "MemUsage": "66.49MiB / 256MiB"
+      },
+      {
+        "Name": "sentinellm-console-1",
+        "CPUPerc": "0.00%",
+        "MemUsage": "20.19MiB / 192MiB"
+      },
+      {
+        "Name": "sentinellm-redis-1",
+        "CPUPerc": "1.42%",
+        "MemUsage": "9.766MiB / 128MiB"
+      },
+      {
+        "Name": "sentinellm-postgres-1",
+        "CPUPerc": "28.81%",
+        "MemUsage": "46.41MiB / 256MiB"
+      }
+    ]
+  ]
+}

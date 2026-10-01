@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/registry.schema.json",
+  "title": "registry",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+          },
+          "executor": {
+            "type": "string",
+            "enum": [
+              "demo_kb",
+              "demo_ticket"
+            ]
+          },
+          "input_schema": {
+            "type": "object"
+          },
+          "output_schema": {
+            "type": "object"
+          },
+          "side_effects": {
+            "const": false
+          }
+        },
+        "required": [
+          "tool_id",
+          "executor",
+          "input_schema",
+          "output_schema",
+          "side_effects"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 16,
+      "minItems": 0
+    },
+    "output_schemas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+          },
+          "schema": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "schema"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 16,
+      "minItems": 0
+    }
+  },
+  "required": [
+    "version",
+    "tools",
+    "output_schemas"
+  ],
+  "additionalProperties": false
+}

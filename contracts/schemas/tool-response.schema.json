@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/tool-response.schema.json",
+  "title": "tool-response",
+  "type": "object",
+  "properties": {
+    "operation_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "tool_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "result": {
+      "type": "object",
+      "maxProperties": 32
+    },
+    "decision_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "maxItems": 4,
+      "minItems": 2
+    }
+  },
+  "required": [
+    "operation_id",
+    "tool_id",
+    "result",
+    "decision_ids"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,29 @@
+{
+  "name": "sentinellm-console",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:e2e": "playwright test",
+    "format": "prettier --write src server.mjs test e2e playwright.config.ts tsconfig.json package.json index.html",
+    "format:check": "prettier --check src server.mjs test e2e playwright.config.ts tsconfig.json package.json index.html"
+  },
+  "dependencies": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "prettier": "3.9.9",
+    "typescript": "7.0.2",
+    "vite": "8.3.1"
+  }
+}

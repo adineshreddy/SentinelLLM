@@ -1,0 +1,343 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sentinellm.local/v1/policy.schema.json",
+  "title": "policy",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "tenant_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+    },
+    "actions": {
+      "type": "object",
+      "properties": {
+        "prompt_injection": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "rag": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "response": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_arguments": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_result": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            }
+          },
+          "required": [
+            "prompt",
+            "rag",
+            "response",
+            "tool_arguments",
+            "tool_result"
+          ],
+          "additionalProperties": false
+        },
+        "jailbreak": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "rag": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "response": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_arguments": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_result": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            }
+          },
+          "required": [
+            "prompt",
+            "rag",
+            "response",
+            "tool_arguments",
+            "tool_result"
+          ],
+          "additionalProperties": false
+        },
+        "secret": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "rag": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "response": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_arguments": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_result": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            }
+          },
+          "required": [
+            "prompt",
+            "rag",
+            "response",
+            "tool_arguments",
+            "tool_result"
+          ],
+          "additionalProperties": false
+        },
+        "pii": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "rag": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "response": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_arguments": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            },
+            "tool_result": {
+              "type": "string",
+              "enum": [
+                "allow",
+                "redact",
+                "deny"
+              ]
+            }
+          },
+          "required": [
+            "prompt",
+            "rag",
+            "response",
+            "tool_arguments",
+            "tool_result"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "prompt_injection",
+        "jailbreak",
+        "secret",
+        "pii"
+      ],
+      "additionalProperties": false
+    },
+    "roles": {
+      "type": "object",
+      "properties": {
+        "support_agent": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+          },
+          "maxItems": 32,
+          "minItems": 0
+        },
+        "viewer": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+          },
+          "maxItems": 32,
+          "minItems": 0
+        },
+        "operator": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]{1,128}$"
+          },
+          "maxItems": 32,
+          "minItems": 0
+        }
+      },
+      "required": [
+        "support_agent",
+        "viewer",
+        "operator"
+      ],
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "request_bytes": {
+          "const": 262144
+        },
+        "response_bytes": {
+          "const": 524288
+        },
+        "requests_per_window": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "window_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "inspection_timeout_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000
+        },
+        "provider_timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 120000
+        },
+        "max_concurrent_provider_calls": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "default_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        }
+      },
+      "required": [
+        "request_bytes",
+        "response_bytes",
+        "requests_per_window",
+        "window_seconds",
+        "inspection_timeout_ms",
+        "provider_timeout_ms",
+        "max_concurrent_provider_calls",
+        "default_output_tokens"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "version",
+    "tenant_id",
+    "actions",
+    "roles",
+    "limits"
+  ],
+  "additionalProperties": false
+}
