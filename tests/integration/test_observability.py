@@ -34,8 +34,14 @@ def test_monitoring_auth_privacy_and_real_prometheus_target():
     status,text=scrape();assert status==200 and 'jvm_memory_used_bytes' in text
     forbidden=['tenant_id=','operation_id=','application_id=','alice@example','Authorization','prompt_text','secret-model']
     assert not any(item in text for item in forbidden)
-    with urllib.request.urlopen('http://127.0.0.1:9090/api/v1/targets',timeout=5) as response:targets=json.load(response)['data']['activeTargets']
-    assert any(t['labels']['job']=='sentinel-gateway' and t['health']=='up' for t in targets)
+    # Previous output-security tests recreate the gateway. Wait for a new successful
+    # scrape rather than asserting against Prometheus's previous 5-second interval.
+    deadline=time.monotonic()+30
+    while True:
+        with urllib.request.urlopen('http://127.0.0.1:9090/api/v1/targets',timeout=5) as response:targets=json.load(response)['data']['activeTargets']
+        if any(t['labels']['job']=='sentinel-gateway' and t['health']=='up' for t in targets):break
+        if time.monotonic()>deadline:pytest.fail('Prometheus did not recover a healthy authenticated gateway target',pytrace=False)
+        time.sleep(.5)
 
 def test_inspection_outage_is_bounded_and_never_dispatches_provider():
     before=metric('sentinel_dependency_calls_total','provider');compose('stop','inspection')

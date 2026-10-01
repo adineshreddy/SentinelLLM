@@ -64,7 +64,7 @@ python3 tools/console_login.py --account operator
 python3 tools/monitoring_login.py
 ```
 
-Open the console at http://127.0.0.1:13000 and Grafana at http://127.0.0.1:13001. The login helpers copy private passwords locally; do not record those commands during a public demo. The Compose console remains on port 3000. Follow the existing [five-minute console walkthrough](../phase-4/README.md). Stop forwards before automated checks, which reserve ports 13000, 18080 and 19090.
+Open the console at http://127.0.0.1:13000 and Grafana at http://127.0.0.1:13001. The login helpers use the macOS clipboard. On Linux, retrieve the separate console/Grafana passwords privately from `.env`. They copy private passwords locally on macOS; do not record those commands during a public demo. The Compose console remains on port 3000. Follow the existing [five-minute console walkthrough](../phase-4/README.md). Stop forwards before automated checks, which reserve ports 13000, 18080 and 19090.
 
 ## Demonstrate a Terraform change
 
