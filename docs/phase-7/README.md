@@ -62,9 +62,10 @@ kubectl --kubeconfig runtime/kind/kubeconfig --context kind-sentinellm -n sentin
 kubectl --kubeconfig runtime/kind/kubeconfig --context kind-sentinellm -n sentinellm port-forward --address 127.0.0.1 service/grafana 13001:3000
 python3 tools/console_login.py --account operator
 python3 tools/monitoring_login.py
+python3 tools/demo.py --base http://127.0.0.1:18080
 ```
 
-Open the console at http://127.0.0.1:13000 and Grafana at http://127.0.0.1:13001. The login helpers use the macOS clipboard. On Linux, retrieve the separate console/Grafana passwords privately from `.env`. They copy private passwords locally on macOS; do not record those commands during a public demo. The Compose console remains on port 3000. Follow the existing [five-minute console walkthrough](../phase-4/README.md). Stop forwards before automated checks, which reserve ports 13000, 18080 and 19090.
+Open the console at http://127.0.0.1:13000 and Grafana at http://127.0.0.1:13001. The login helpers copy passwords to the macOS clipboard; on Linux, retrieve the separate console/Grafana passwords privately from `.env`. Keep login steps out of public recordings. The console helper prints the Compose URL; use port 13000 for this Kubernetes deployment. The Compose console remains on port 3000. Follow the existing [five-minute console walkthrough](../phase-4/README.md). Stop forwards before automated checks, which reserve ports 13000, 18080 and 19090.
 
 ## Demonstrate a Terraform change
 

@@ -29,8 +29,26 @@ async function login(page: Page, role = "operator") {
   await expect(
     page.getByRole("heading", { name: "Your AI perimeter, in view." }),
   ).toBeVisible();
+  // The shell heading renders before the initial two-request refresh finishes.
+  // Wait for real configuration so direct API checks do not become a third
+  // concurrent request and correctly hit the BFF's admission limit.
+  await expect(
+    page
+      .locator(".metrics article")
+      .filter({ hasText: "Active policy" })
+      .getByRole("heading"),
+  ).toHaveText(/^v\d+$/);
   await expect(page.getByRole("status")).toHaveCount(0);
   return session;
+}
+async function configuration(page: Page) {
+  const response = await page.context().request.get(origin + "/api/config");
+  expect(response.status()).toBe(200);
+  const value = await response.json();
+  expect(value.policy).toBeDefined();
+  expect(value.registry).toBeDefined();
+  expect(typeof value.revision).toBe("number");
+  return value;
 }
 async function idle(page: Page) {
   await expect(page.getByText("Working with the gateway…")).toHaveCount(0);
@@ -155,18 +173,14 @@ test("policy publication changes enforcement, conflicts are rejected, and restor
 }) => {
   const session = await login(page);
   const headers = { Origin: origin, "X-CSRF-Token": session.csrf };
-  const original = await (
-    await page.context().request.get(origin + "/api/config")
-  ).json();
+  const original = await configuration(page);
   try {
     await page.getByRole("button", { name: "Policies", exact: true }).click();
     await idle(page);
     await page.getByLabel("pii prompt action").selectOption("deny");
     await page.getByRole("button", { name: /Publish revision/ }).click();
     await expect(page.getByRole("status")).toContainText("Published revision");
-    const current = await (
-      await page.context().request.get(origin + "/api/config")
-    ).json();
+    const current = await configuration(page);
     expect(current.revision).toBe(original.revision + 1);
     const stale = await page.context().request.put(origin + "/api/config", {
       headers,
@@ -193,9 +207,7 @@ test("policy publication changes enforcement, conflicts are rejected, and restor
       fullPage: true,
     });
   } finally {
-    const current = await (
-      await page.context().request.get(origin + "/api/config")
-    ).json();
+    const current = await configuration(page);
     original.policy.version = current.revision + 1;
     original.registry.version = current.revision + 1;
     const restore = await page.context().request.put(origin + "/api/config", {
