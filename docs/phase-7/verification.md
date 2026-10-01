@@ -13,14 +13,18 @@ Local validation on 2026-10-01: macOS ARM64, Apple M5, Docker 29.6.1 / Compose 5
 | Monitoring | Authenticated gateway scrape target healthy |
 | NetworkPolicy | Five allowed internal paths and five denied internal paths passed; DNS allowed; external egress blocked with a successful unrestricted control probe |
 | Recovery | PostgreSQL, Redis and gateway Pod replacement passed; prior completed operation retained |
-| Terraform change | Plan/apply changed gateway replicas 1 → 2; two ready replicas passed smoke checks; restored to 1 |
-| Secret/state boundary | Actual state and backups scanned; no configured credential values; generated credentials/identity hashes excluded from staged source |
+| Terraform change | Plan/apply changed gateway replicas 1 → 2; two ready replicas confirmed and service smoke checks passed; restored to 1 |
+| Secret/state boundary | Actual state and backups scanned; no configured credential values; all eight Secret state entries omit data/binary/write-only payloads; generated credentials/identity hashes excluded from staged source |
 | Teardown | Terraform destroyed all 45 resources; kind removed only the dedicated cluster |
 | Clean recreation | Passed: bootstrap, image load, 45-resource apply, smoke/monitoring checks and real network checks repeated after full teardown |
-| Hosted CI | Kubernetes passed twice; all 26 Compose checks passed on the second run. Browser checks passed 5/6 and exposed a policy-test startup admission race; all 6 passed locally after synchronizing on loaded configuration. An Ubuntu package-mirror slowdown timed out browser setup on a later runner; CI now uses the digest-pinned version-matched official Playwright image. Final full rerun pending. |
+| Hosted CI | Both jobs passed on [run 36896896390](https://github.com/adineshreddy/SentinelLLM/actions/runs/36896896390), code commit `5ddebb9`: 187 core/integration/browser checks plus contracts, deployment invariants, Prometheus rules and Kubernetes verification |
 
 The network checker separates Service workload labels from probe role labels so test Pods never become live Service endpoints. It fails if the positive external control cannot connect; a generally broken network is not accepted as evidence of external-egress enforcement. Recovery deletes runtime Pods, preserving Terraform-owned controllers/PVCs. No hosted model calls or cloud provisioning have been performed. Compose volumes remain independent and untouched.
 
 Initial validation caught and corrected explicit container non-root settings, a mock fixture default mismatch, configuration-change rollout behavior, separation of network probe Pods from Service endpoints, bounded Prometheus scrape recovery, and browser-test synchronization with the initial configuration refresh. No security checks were bypassed to obtain a passing result.
 
 The public repository is [adineshreddy/SentinelLLM](https://github.com/adineshreddy/SentinelLLM). Single-node kind tests demonstrate local deployment and isolation; they do not establish production high availability, cloud deployment or a new performance result.
+
+CI counts: 68 Java, 37 inspection, 13 MCP adapter, 4 setup and 17 BFF checks; 16 isolated PostgreSQL/Redis checks; 26 Compose security/reliability checks; 5 console and 1 Grafana browser checks. Contracts, deployment/network assertions and Prometheus rule fixtures are additional checks. The digest-pinned Playwright 1.63.0 image also passed a non-root Linux ARM64 launch/render smoke locally; the complete browser suite passed on hosted Linux AMD64.
+
+Only documentation/status updates follow the verified code commit. They use a docs-only `[skip ci]` commit to avoid repeating the completed runtime suite. No application, deployment or workflow code is changed by that final documentation commit.

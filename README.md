@@ -2,9 +2,13 @@
 
 AI security gateway for LLM applications, RAG pipelines, and agents.
 
-**Current state:** Phases 0–6 implemented. Phase 7 adds GitHub Actions, a dedicated kind/Calico Kubernetes deployment, Terraform-managed workloads and tested network restrictions, plus deployment/recovery guides. Final local recreation and hosted CI validation are in progress. The gateway and authenticated console retain policy/tool/schema enforcement, durable PostgreSQL evidence, Redis quotas, opt-in local ML detection, Prometheus/Grafana and measured local performance. Rule-only inspection and mock generation remain the defaults.
+[![CI](https://github.com/adineshreddy/SentinelLLM/actions/workflows/ci.yml/badge.svg)](https://github.com/adineshreddy/SentinelLLM/actions/workflows/ci.yml)
+
+**Current state:** Phase 7 implemented and validated: public GitHub Actions CI, a dedicated kind/Calico Kubernetes deployment, Terraform-managed workloads, real network-isolation tests, recovery and clean recreation. Phases 0–6 retain policy/tool/schema enforcement, an authenticated console, durable PostgreSQL evidence, Redis quotas, opt-in local ML detection, Prometheus/Grafana and measured local performance. Rule-only inspection and mock generation remain the defaults.
 
 **Stack:** Java/Spring Boot gateway and policy authority; Python/FastAPI detection; React/TypeScript console with a Node.js BFF; PostgreSQL; Redis; Docker; local Kubernetes; Terraform; GitHub Actions; Prometheus/Grafana.
+
+![SentinelLLM security console with synthetic evidence](docs/phase-4/overview.png)
 
 ## Start here
 
@@ -37,6 +41,7 @@ AI security gateway for LLM applications, RAG pipelines, and agents.
 - [Architecture decisions](docs/decisions/0001-foundation.md)
 - [Console trust boundary](docs/decisions/0003-console-boundary.md)
 - [Local classifier decision](docs/decisions/0004-local-classifier.md)
+- [Local deployment ownership decision](docs/decisions/0005-local-deployment.md)
 
 ## Run the working demo
 

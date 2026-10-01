@@ -2,7 +2,7 @@
 
 **Project:** AI Security Gateway for Agentic Applications  
 **Plan date:** September 30, 2026  
-**Status:** Phase 6 observability, reliability and local performance measurement implemented; evidence recorded in docs/phase-6/  
+**Status:** Phase 7 CI/CD, local Kubernetes and Terraform implemented and validated; evidence recorded in docs/phase-7/  
 **Budget:** No paid APIs or hosted infrastructure required for development and demonstration
 
 ## 1. Objective
@@ -279,6 +279,8 @@ Measure before changing frameworks. There is no requirement to claim Java is fas
 **Ownership:** kind creates the cluster. Terraform manages resources inside that existing cluster. One tool owns each resource; standalone manifests/scripts do not also mutate Terraform-owned objects. Sensitive state and credentials are excluded from Git.
 
 **Gate:** Recreate the deployment from documented steps, pass smoke tests, show a meaningful Terraform change, verify blocked network paths using a policy-capable local setup, and cleanly remove project resources.
+
+**Implemented and validated:** See [Phase 7 guide](docs/phase-7/README.md), [verification evidence](docs/phase-7/verification.md) and [recovery runbook](docs/phase-7/runbook.md). Public GitHub Actions passes for adineshreddy/SentinelLLM. Terraform creates 45 resources with monitoring enabled; real Pod network tests, durable operation recovery, gateway scaling 1 → 2 → 1, full teardown and clean recreation passed. Generated credentials enter write-only Secret fields through ephemeral variables and remain outside Git/state. kind owns the cluster, bootstrap owns Calico, and Terraform owns application resources.
 
 Local testing is evidence of Kubernetes/IaC skills, not evidence of a completed cloud deployment.
 
